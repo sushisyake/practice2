@@ -17,15 +17,27 @@
           </td>
           <td><%= link_to @book.title, @book %></td>
           <td><%= @book.body %></td>
+          <td><% if @book.favorited_by?(current_user) %>
+                <%= link_to book_favorites_path(@book), method: :delete do %>
+                  ♥<%= @book.favorites.count %> いいね
+                <% end %>
+              <% else %>
+                <%= link_to book_favorites_path(@book), method: :post do %>
+                  ♡<%= @book.favorites.count %> いいね
+                <% end %>
+              <% end %>
+          </td>
           <td>
             コメント件数：<%= @book.book_comments.count %>
           </td>
-                    
+
           <% if @book.user == current_user %>
             <td><%= link_to 'Edit', edit_book_path(@book), class: "btn btn-sm btn-success" %></td>
             <td><%= link_to 'Destroy', @book, method: :delete, data: { confirm: '本当に消しますか？' }, class: "btn btn-sm btn-danger"%></td>
           <% end %>
         </tr>
+      </table>
+      <table>
         <tr>
           <td>
           <% @book.book_comments.each do |book_comment| %>
@@ -42,12 +54,11 @@
           <td>
             <%= form_with model: [@book, @book_comment] do |f| %>
               <%= f.text_area :comment, rows: '5', placeholder: "コメントをここに" %>
-              <%= f.submit "送信する" %>
+              <br><%= f.submit "送信する" %>
             <% end %>
           </td>
         </tr>
       </table>
     </div>
-   
   </div>
 </div>
